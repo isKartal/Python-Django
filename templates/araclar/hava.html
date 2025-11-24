@@ -5,8 +5,8 @@
 {% block content %}
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card shadow text-center">
-                <div class="card-header bg-info text-white">
+            <div class="card shadow-lg text-center">
+                <div class="card-header bg-primary text-white">
                     <h3>🌦️ Hava Durumu Sorgula</h3>
                 </div>
                 <div class="card-body">
@@ -24,9 +24,9 @@
                     {% endif %}
 
                     {% if sonuc %}
-                        <div class="card bg-light border-0">
+                        <div class="card bg-dark border-secondary">
                             <div class="card-body">
-                                <h2 class="display-4 fw-bold mb-0">{{ sonuc.sehir }}</h2>
+                                <h2 class="display-4 fw-bold mb-0 text-white">{{ sonuc.sehir }}</h2>
                                 
                                 <img src="http://openweathermap.org/img/w/{{ sonuc.ikon }}.png" alt="ikon" style="width: 100px;">
                                 

@@ -19,13 +19,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
+from decouple import config # En üste ekle
+
+# ...
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ds-wo+7cl5vt*h_9u(z_ri1@8*-2k_u8pz6ywu27ln5p%y-+cm'
+SECRET_KEY = config('SECRET_KEY') # .env'den çeker
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=True, cast=bool) # .env'den çeker, yoksa True kullanır
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*').split(',')
+# ...
 
 
 # Application definition

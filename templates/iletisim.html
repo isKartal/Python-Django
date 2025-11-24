@@ -5,19 +5,33 @@
 {% block content %}
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card shadow">
-                <div class="card-header bg-dark text-white">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white text-center">
                     <h4 class="mb-0">Bana Ulaşın 📩</h4>
                 </div>
                 <div class="card-body">
+                    
                     <form method="POST">
                         {% csrf_token %}
-                        <div class="mb-3"><label>Adınız</label> {{ form.isim }}</div>
-                        <div class="mb-3"><label>Email</label> {{ form.email }}</div>
-                        <div class="mb-3"><label>Mesajınız</label> {{ form.mesaj }}</div>
                         
-                        <button type="submit" class="btn btn-primary w-100">Gönder</button>
+                        <div class="mb-3">
+                            <label class="form-label text-white">Adınız</label>
+                            {{ form.isim }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-white">Email</label>
+                            {{ form.email }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-white">Mesajınız</label>
+                            {{ form.mesaj }}
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100 py-2 mt-3">Mesajı Gönder</button>
                     </form>
+
                 </div>
             </div>
         </div>
