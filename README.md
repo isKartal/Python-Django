@@ -43,7 +43,7 @@ Projeyi bilgisayarınızda çalıştırmak için şu adımları izleyin:
     python manage.py runserver
     ```
 
-Tarayıcınızda `http://127.0.0.1:8000/` adresine giderek projeyi inceleyebilirsiniz.
+Tarayıcınızda `http://127.0.0.1:8000/` adresine giderek projeyi inceleyebilirsiniz...
 
 ---
 *Geliştiren: İsmail Berk Kartal*
