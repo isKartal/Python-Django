@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Kitap Avcısı (Scraper){% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="text-center mb-5">
+        <h1 class="fw-bold text-warning">📚 Kitap Avcısı</h1>
+        <p class="lead text-muted">
+            Python <strong>BeautifulSoup</strong> kütüphanesi kullanılarak 
+            <a href="http://books.toscrape.com" target="_blank">books.toscrape.com</a> 
+            adresinden anlık veri çekilmektedir.
+        </p>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-warning btn-lg text-dark fw-bold px-5 shadow">
+                🔍 Kitapları Getir
+            </button>
+        </form>
+
+        {% if hata %}
+            <div class="alert alert-danger mt-3">{{ hata }}</div>
+        {% endif %}
+    </div>
+
+    {% if kitaplar %}
+        <div class="row">
+            {% for kitap in kitaplar %}
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="{{ kitap.resim }}" class="card-img-top p-3" alt="{{ kitap.baslik }}" style="height: 250px; object-fit: contain;">
+                        <div class="card-body d-flex flex-column">
+                            <h6 class="card-title text-truncate" title="{{ kitap.baslik }}">{{ kitap.baslik }}</h6>
+                            <div class="mt-auto">
+                                <p class="mb-1 text-warning fw-bold">⭐ Puan: {{ kitap.puan }}</p>
+                                <h4 class="text-success fw-bold">{{ kitap.fiyat }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="alert alert-success text-center mt-4">
+            ✅ Toplam <strong>{{ kitaplar|length }}</strong> kitap başarıyla çekildi.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

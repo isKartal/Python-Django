@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Ana Sayfa | Portfolyo{% endblock %}
+
+{% block content %}
+    <div class="text-center mb-5">
+        <h1>Projelerim</h1>
+        <p class="lead text-muted">Python ve Django ile geliştirdiğim uygulamalar.</p>
+    </div>
+
+    <div class="row">
+        {% for proje in projeler %}
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    {% if proje.resim %}
+                        <img src="{{ proje.resim.url }}" class="card-img-top" alt="{{ proje.baslik }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                        <div style="height: 200px; background-color: #ddd; display: flex; align-items: center; justify-content: center; color: #666;">
+                            Resim Yok
+                        </div>
+                    {% endif %}
+                    
+                    <div class="card-body">
+                        <h5 class="card-title">{{ proje.baslik }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ proje.teknoloji }}</h6>
+                        <p class="card-text">{{ proje.aciklama|truncatewords:20 }}</p> <a href="{% url 'detay' proje.pk %}" class="btn btn-primary btn-sm">İncele</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

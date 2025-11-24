@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Hava Durumu{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow text-center">
+                <div class="card-header bg-info text-white">
+                    <h3>🌦️ Hava Durumu Sorgula</h3>
+                </div>
+                <div class="card-body">
+                    
+                    <form method="POST" class="mb-4">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            {{ form.sehir }}
+                            <button type="submit" class="btn btn-primary">Sorgula</button>
+                        </div>
+                    </form>
+
+                    {% if hata %}
+                        <div class="alert alert-danger">{{ hata }}</div>
+                    {% endif %}
+
+                    {% if sonuc %}
+                        <div class="card bg-light border-0">
+                            <div class="card-body">
+                                <h2 class="display-4 fw-bold mb-0">{{ sonuc.sehir }}</h2>
+                                
+                                <img src="http://openweathermap.org/img/w/{{ sonuc.ikon }}.png" alt="ikon" style="width: 100px;">
+                                
+                                <h3 class="display-3 fw-bold text-primary">{{ sonuc.sicaklik }}°C</h3>
+                                <p class="fs-4 text-muted text-uppercase">{{ sonuc.durum }}</p>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

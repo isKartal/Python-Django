@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Güçlü Şifre Oluşturucu{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white text-center">
+                    <h3>🔐 Şifre Oluşturucu</h3>
+                </div>
+                <div class="card-body">
+                    
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">{{ form.uzunluk.label }}</label>
+                            {{ form.uzunluk }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">İçerik Seçenekleri:</label>
+                            <div class="card p-3 bg-light border-0">
+                                <div class="form-check form-switch mb-2">
+                                    {{ form.kucuk_harf }} <label class="form-check-label">Küçük Harfler (a-z)</label>
+                                </div>
+                                <div class="form-check form-switch mb-2">
+                                    {{ form.buyuk_harf }} <label class="form-check-label">Büyük Harfler (A-Z)</label>
+                                </div>
+                                <div class="form-check form-switch mb-2">
+                                    {{ form.rakam }} <label class="form-check-label">Rakamlar (0-9)</label>
+                                </div>
+                                <div class="form-check form-switch">
+                                    {{ form.sembol }} <label class="form-check-label">Semboller (!@#$)</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 py-2">Şifre Üret</button>
+                    </form>
+
+                    {% if sifre %}
+                        <div class="alert alert-warning mt-4 text-center">
+                            <p class="mb-1 text-muted">Oluşturulan Şifreniz:</p>
+                            <h2 class="fw-bold text-dark font-monospace" style="letter-spacing: 2px; word-break: break-all;">{{ sifre }}</h2>
+                        </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

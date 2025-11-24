@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>{% block title %}İsmail'in Portfolyosu{% endblock %}</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        body { background-color: #f8f9fa; display: flex; flex-direction: column; min-height: 100vh; }
+        .navbar { margin-bottom: 40px; }
+        .footer { margin-top: auto; padding: 20px; text-align: center; color: #777; background-color: #e9ecef; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">🚀 İsmail'in Portfolyosu</a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#anaMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="anaMenu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Ana Sayfa</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'hakkimda' %}">👨‍💻 Hakkımda</a></li>
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            🛠️ Araçlar
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'cevirici' %}">🔄 Birim Çevirici</a></li>
+                            <li><a class="dropdown-item" href="{% url 'sifre' %}">🔐 Şifre Oluşturucu</a></li>
+                            <li><a class="dropdown-item" href="{% url 'hava' %}">🌦️ Hava Durumu</a></li>
+                            <li><a class="dropdown-item" href="{% url 'kitaplar' %}">📚 Kitap Avcısı</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item"><a class="nav-link" href="{% url 'iletisim' %}">📩 İletişim</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2025 İsmail Berk Kartal - Tüm hakları saklıdır.</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

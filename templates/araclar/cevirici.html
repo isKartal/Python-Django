@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Birim Çevirici{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow text-center">
+                <div class="card-header bg-primary text-white">
+                    <h3>🔄 Birim Çevirici</h3>
+                </div>
+                <div class="card-body">
+                    
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3 text-start">
+                            <label class="form-label fw-bold">Çevrilecek Değer:</label>
+                            {{ form.sayi }}
+                        </div>
+                        <div class="mb-3 text-start">
+                            <label class="form-label fw-bold">İşlem Seç:</label>
+                            {{ form.islem }}
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Hesapla</button>
+                    </form>
+
+                    {% if sonuc %}
+                        <div class="alert alert-info mt-4">
+                            <h4>Sonuç:</h4>
+                            <p class="fs-3 fw-bold mb-0">{{ sonuc }}</p>
+                        </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

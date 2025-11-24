@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ proje.baslik }} | Detay{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow">
+                <div class="row g-0">
+                    <div class="col-md-6">
+                        {% if proje.resim %}
+                            <img src="{{ proje.resim.url }}" class="img-fluid rounded-start h-100" style="object-fit: cover;" alt="{{ proje.baslik }}">
+                        {% else %}
+                            <div class="d-flex align-items-center justify-content-center bg-secondary text-white h-100" style="min-height: 300px;">
+                                Resim Yok
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card-body d-flex flex-column h-100">
+                            <div>
+                                <h1 class="card-title">{{ proje.baslik }}</h1>
+                                <span class="badge bg-primary mb-3">{{ proje.teknoloji }}</span>
+                                <p class="card-text fs-5">{{ proje.aciklama }}</p>
+                            </div>
+                            
+                            <div class="mt-auto pt-3">
+                                <hr>
+                                <a href="/" class="btn btn-outline-dark">← Ana Sayfaya Dön</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
