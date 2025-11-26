@@ -1,43 +1,30 @@
 {% extends 'base.html' %}
-
 {% block title %}Hava Durumu{% endblock %}
 
 {% block content %}
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-lg text-center">
-                <div class="card-header bg-primary text-white">
-                    <h3>🌦️ Hava Durumu Sorgula</h3>
-                </div>
-                <div class="card-body">
-                    
-                    <form method="POST" class="mb-4">
-                        {% csrf_token %}
-                        <div class="input-group">
-                            {{ form.sehir }}
-                            <button type="submit" class="btn btn-primary">Sorgula</button>
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow-lg" data-aos="fade-up">
+            <div class="card-body p-4 text-center">
+                <h3 class="text-white mb-4">🌦️ Hava Durumu</h3>
+                <form method="POST" class="d-flex gap-2 mb-4">
+                    {% csrf_token %}
+                    {{ form.sehir }}
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                </form>
+                {% if sonuc %}
+                    <div class="card bg-primary text-white border-0 shadow-lg">
+                        <div class="card-body">
+                            <h2 class="fw-bold">{{ sonuc.sehir }}</h2>
+                            <img src="http://openweathermap.org/img/wn/{{ sonuc.ikon }}@2x.png" style="width:100px;">
+                            <h1 class="display-3 fw-bold">{{ sonuc.sicaklik }}°</h1>
+                            <p class="text-uppercase">{{ sonuc.durum }}</p>
                         </div>
-                    </form>
-
-                    {% if hata %}
-                        <div class="alert alert-danger">{{ hata }}</div>
-                    {% endif %}
-
-                    {% if sonuc %}
-                        <div class="card bg-dark border-secondary">
-                            <div class="card-body">
-                                <h2 class="display-4 fw-bold mb-0 text-white">{{ sonuc.sehir }}</h2>
-                                
-                                <img src="http://openweathermap.org/img/w/{{ sonuc.ikon }}.png" alt="ikon" style="width: 100px;">
-                                
-                                <h3 class="display-3 fw-bold text-primary">{{ sonuc.sicaklik }}°C</h3>
-                                <p class="fs-4 text-muted text-uppercase">{{ sonuc.durum }}</p>
-                            </div>
-                        </div>
-                    {% endif %}
-
-                </div>
+                    </div>
+                {% endif %}
+                {% if hata %}<div class="alert alert-danger mt-3">{{ hata }}</div>{% endif %}
             </div>
         </div>
     </div>
+</div>
 {% endblock %}

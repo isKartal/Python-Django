@@ -1,39 +1,20 @@
 {% extends 'base.html' %}
-
-{% block title %}İletişim | Portfolyo{% endblock %}
-
+{% block title %}İletişim{% endblock %}
 {% block content %}
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-lg">
-                <div class="card-header bg-primary text-white text-center">
-                    <h4 class="mb-0">Bana Ulaşın 📩</h4>
-                </div>
-                <div class="card-body">
-                    
-                    <form method="POST">
-                        {% csrf_token %}
-                        
-                        <div class="mb-3">
-                            <label class="form-label text-white">Adınız</label>
-                            {{ form.isim }}
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label text-white">Email</label>
-                            {{ form.email }}
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label text-white">Mesajınız</label>
-                            {{ form.mesaj }}
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary w-100 py-2 mt-3">Mesajı Gönder</button>
-                    </form>
-
-                </div>
-            </div>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="text-center mb-4">
+            <h2 class="text-white fw-bold">Bana Ulaşın 📩</h2>
+        </div>
+        <div class="card shadow-lg p-4" data-aos="fade-up">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3"><label class="form-label">İsim</label>{{ form.isim }}</div>
+                <div class="mb-3"><label class="form-label">Email</label>{{ form.email }}</div>
+                <div class="mb-3"><label class="form-label">Mesaj</label>{{ form.mesaj }}</div>
+                <button type="submit" class="btn btn-primary w-100 py-3 mt-2">Gönder</button>
+            </form>
         </div>
     </div>
+</div>
 {% endblock %}

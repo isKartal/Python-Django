@@ -1,0 +1,193 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    /* Renk Paleti - Daha Kontrastlı */
+    --bg-dark: #0f172a;       /* Çok koyu lacivert */
+    --bg-card: rgba(30, 41, 59, 0.7); /* Kart arka planı */
+    --primary-color: #38bdf8; /* Parlak Gökyüzü Mavisi */
+    --accent-color: #f472b6;  /* Parlak Pembe */
+    --glass-border: rgba(255, 255, 255, 0.15); /* Çerçeveler biraz daha belirgin */
+    
+    /* Metin Renkleri - OKUNABİLİRLİK İÇİN GÜNCELLENDİ */
+    --text-main: #f1f5f9;      /* Neredeyse beyaz (Ana metin) */
+    --text-muted: #94a3b8;     /* Açık gri (İkincil metin) - Eskisinden çok daha parlak */
+}
+
+/* --- TEMEL AYARLAR --- */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-dark);
+    /* Arka plana hafif, göz yormayan modern bir desen */
+    background-image: 
+        radial-gradient(circle at 15% 50%, rgba(56, 189, 248, 0.08) 0%, transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(244, 114, 182, 0.08) 0%, transparent 25%);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden; /* Yatay taşmayı engelle */
+}
+
+/* Metin seçildiğinde çıkan renk (Hoş bir detay) */
+::selection {
+    background: var(--primary-color);
+    color: #000;
+}
+
+/* --- ÖZEL KAYDIRMA ÇUBUĞU (SCROLLBAR) --- */
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: #1e293b; 
+}
+::-webkit-scrollbar-thumb {
+    background: #475569; 
+    border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color); 
+}
+
+/* --- OKUNABİLİRLİK DÜZELTMELERİ (Bootstrap Override) --- */
+
+/* Başlıkların hepsi parlak beyaz olsun */
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    color: #ffffff !important;
+    letter-spacing: -0.5px; /* Modern sıkışık harfler */
+}
+
+/* text-muted sınıfını ezip daha okunur yapıyoruz */
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+/* text-secondary sınıfını ezip daha okunur yapıyoruz */
+.text-secondary {
+    color: #cbd5e1 !important; /* Çok açık gri */
+}
+
+/* Linkler */
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+a:hover {
+    color: var(--accent-color);
+}
+
+/* --- BİLEŞENLER --- */
+
+/* Navbar */
+.navbar {
+    background: rgba(15, 23, 42, 0.85) !important; /* Biraz daha opak */
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--glass-border);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    background: linear-gradient(135deg, var(--primary-color), #ffffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Kartlar (Glassmorphism) */
+.card {
+    background: var(--bg-card) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Yaylanma efekti */
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 15px 35px -5px rgba(56, 189, 248, 0.25) !important;
+}
+
+/* Kart içindeki metinlerin rengini garantiye al */
+.card-body, .card-text {
+    color: var(--text-main);
+}
+
+/* Form Elemanları (Input, Select) */
+.form-control, .form-select {
+    background-color: rgba(0, 0, 0, 0.2) !important; /* Daha koyu zemin */
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+    border-radius: 10px;
+    padding: 12px 15px;
+    font-size: 1rem;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.15);
+}
+
+/* Placeholder (Silik yazı) rengini açma */
+::placeholder { 
+    color: rgba(255, 255, 255, 0.4) !important;
+    opacity: 1; 
+}
+
+/* Etiketler (Labels) */
+.form-label, .form-check-label {
+    color: #e2e8f0;
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+}
+
+/* --- BUTONLAR --- */
+.btn {
+    border-radius: 10px;
+    padding: 10px 24px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color), #2563eb);
+    border: none;
+    box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #2563eb, var(--primary-color));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #fbbf24, #d97706);
+    color: #1a1a1a !important; /* Buton içi yazı siyah olsun ki okunsun */
+    border: none;
+}
+
+.btn-outline-light {
+    border: 2px solid rgba(255,255,255,0.2);
+    color: #fff;
+}
+.btn-outline-light:hover {
+    background: #fff;
+    color: #000;
+    border-color: #fff;
+}
+
+/* Footer */
+.footer {
+    background: #0b1120; /* Siteden daha koyu */
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 2rem 0;
+    margin-top: auto;
+}
