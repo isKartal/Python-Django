@@ -1,0 +1,14 @@
+<div class="mt-4 p-3 rounded bg-black border border-success text-center position-relative fade-in">
+    <h4 class="text-success font-monospace mb-0" id="passText">{{ sifre }}</h4>
+    
+    <button onclick="navigator.clipboard.writeText(document.getElementById('passText').innerText)" 
+            class="btn btn-sm btn-outline-success position-absolute top-0 end-0 m-2"
+            title="Kopyala">
+        <i class="fas fa-copy"></i>
+    </button>
+</div>
+
+<style>
+    .fade-in { animation: fadeIn 0.5s; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+</style>

@@ -1,0 +1,22 @@
+{% if kitaplar %}
+    <div class="row row-cols-1 row-cols-md-4 g-4 fade-in">
+        {% for kitap in kitaplar %}
+            <div class="col">
+                <div class="card h-100 border-0 bg-dark hover-scale">
+                    <img src="{{ kitap.resim }}" class="card-img-top p-3 bg-white" style="height:200px; object-fit:contain;">
+                    <div class="card-body text-center">
+                        <h6 class="text-white text-truncate" title="{{ kitap.baslik }}">{{ kitap.baslik }}</h6>
+                        <div class="d-flex justify-content-between mt-3 text-warning fw-bold">
+                            <span>⭐ {{ kitap.puan }}</span>
+                            <span class="text-success">{{ kitap.fiyat }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% if hata %}
+    <div class="alert alert-danger mt-4 text-center fade-in">{{ hata }}</div>
+{% endif %}

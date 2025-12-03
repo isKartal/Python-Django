@@ -1,10 +1,11 @@
-import random
-import requests
-from bs4 import BeautifulSoup
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages 
+from django.core.cache import cache
+from django.core.mail import send_mail
+from django.conf import settings
 from .models import Proje, Hakkimda
 from .forms import IletisimFormu, CeviriciFormu, SifreFormu, HavaDurumuFormu
+from .utils import sifre_uret, hava_durumu_getir, kitaplari_scrapla
 
 # -----------------------------------------------------
 # ANA SAYFALAR
@@ -12,8 +13,7 @@ from .forms import IletisimFormu, CeviriciFormu, SifreFormu, HavaDurumuFormu
 
 def home_view(request):
     projeler = Proje.objects.all().order_by('-id')
-    context = {"projeler": projeler}
-    return render(request, "home.html", context)
+    return render(request, "home.html", {"projeler": projeler})
 
 def detay_view(request, pk):
     tek_proje = get_object_or_404(Proje, pk=pk)
@@ -24,18 +24,32 @@ def hakkimda_view(request):
     return render(request, 'hakkimda.html', {'hakkimda': hakkimda_veri})
 
 def iletisim_view(request):
-    if request.method == 'POST':
-        form = IletisimFormu(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Mesajınız başarıyla gönderildi!")
-            return redirect('iletisim')
-    else:
-        form = IletisimFormu()
+    form = IletisimFormu(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        kaydedilen_mesaj = form.save()
+        
+        # E-Posta Gönderimi
+        try:
+            konu = f"Portfolyodan Yeni Mesaj: {kaydedilen_mesaj.isim}"
+            mesaj_icerigi = f"Gönderen: {kaydedilen_mesaj.isim} ({kaydedilen_mesaj.email})\n\nMesaj:\n{kaydedilen_mesaj.mesaj}"
+            
+            send_mail(
+                subject=konu,
+                message=mesaj_icerigi,
+                from_email='sistem@portfolyo.com',
+                recipient_list=['i.berkkartal@gmail.com'], # Kendi mail adresin
+                fail_silently=False,
+            )
+            messages.success(request, "Mesajınız alındı ve mail iletildi!")
+        except Exception as e:
+            print(f"Mail Hatası: {e}")
+            messages.warning(request, "Mesaj kaydedildi fakat bildirim maili gönderilemedi.")
+            
+        return redirect('iletisim')
     return render(request, 'iletisim.html', {'form': form})
 
 # -----------------------------------------------------
-# ARAÇLAR (DÜZELTİLDİ VE GELİŞTİRİLDİ)
+# ARAÇLAR (HTMX DESTEKLİ)
 # -----------------------------------------------------
 
 def cevirici_view(request):
@@ -46,22 +60,18 @@ def cevirici_view(request):
         sayi = form.cleaned_data['sayi']
         islem = form.cleaned_data['islem']
         
-        # --- EKSİK OLAN MANTIKLAR EKLENDİ ---
         if islem == 'c_to_f':
-            hesap = (sayi * 1.8) + 32
-            sonuc = f"{sayi}°C = {hesap:.2f}°F"
-            
+            sonuc = f"{sayi}°C = {(sayi * 1.8) + 32:.2f}°F"
         elif islem == 'f_to_c':
-            hesap = (sayi - 32) / 1.8
-            sonuc = f"{sayi}°F = {hesap:.2f}°C"
-            
+            sonuc = f"{sayi}°F = {(sayi - 32) / 1.8:.2f}°C"
         elif islem == 'km_to_mil':
-            hesap = sayi * 0.621371
-            sonuc = f"{sayi} KM = {hesap:.2f} Mil"
-            
+            sonuc = f"{sayi} KM = {sayi * 0.621371:.2f} Mil"
         elif islem == 'mil_to_km':
-            hesap = sayi / 0.621371
-            sonuc = f"{sayi} Mil = {hesap:.2f} KM"
+            sonuc = f"{sayi} Mil = {sayi / 0.621371:.2f} KM"
+        
+        # HTMX İsteği ise sadece sonucu döndür
+        if request.headers.get('HX-Request'):
+            return render(request, 'partials/cevirici_sonuc.html', {'sonuc': sonuc})
             
     return render(request, 'araclar/cevirici.html', {'form': form, 'sonuc': sonuc})
 
@@ -70,24 +80,17 @@ def sifre_view(request):
     form = SifreFormu(request.POST or None)
     
     if request.method == 'POST' and form.is_valid():
-        uzunluk = form.cleaned_data['uzunluk']
+        sonuc = sifre_uret(
+            form.cleaned_data['uzunluk'],
+            form.cleaned_data['kucuk_harf'],
+            form.cleaned_data['buyuk_harf'],
+            form.cleaned_data['rakam'],
+            form.cleaned_data['sembol']
+        )
+        uretilen_sifre = sonuc if sonuc else "Hata: Seçim yapın!"
         
-        # --- HAVUZ MANTIĞI TAMAMLANDI ---
-        havuz = ""
-        if form.cleaned_data['kucuk_harf']:
-            havuz += "abcdefghijklmnopqrstuvwxyz"
-        if form.cleaned_data['buyuk_harf']:
-            havuz += "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        if form.cleaned_data['rakam']:
-            havuz += "0123456789"
-        if form.cleaned_data['sembol']:
-            havuz += "!@#$%^&*()_+-=[]{}|;:,.<>?"
-            
-        if havuz:
-            for _ in range(uzunluk):
-                uretilen_sifre += random.choice(havuz)
-        else:
-            uretilen_sifre = "Hata: En az bir karakter türü seçmelisiniz!"
+        if request.headers.get('HX-Request'):
+            return render(request, 'partials/sifre_sonuc.html', {'sifre': uretilen_sifre})
             
     return render(request, 'araclar/sifre.html', {'form': form, 'sifre': uretilen_sifre})
 
@@ -97,61 +100,25 @@ def hava_durumu_view(request):
     form = HavaDurumuFormu(request.POST or None)
     
     if request.method == 'POST' and form.is_valid():
-        sehir = form.cleaned_data['sehir']
-        api_key = "2702ee2453553eac14cc1081ea360b0f" # OpenWeatherMap Key
+        sonuc, hata = hava_durumu_getir(form.cleaned_data['sehir'])
         
-        url = f"http://api.openweathermap.org/data/2.5/weather?q={sehir}&appid={api_key}&units=metric&lang=tr"
-        
-        try:
-            response = requests.get(url)
-            if response.status_code == 200:
-                data = response.json()
-                sonuc = {
-                    'sehir': data['name'],
-                    'sicaklik': round(data['main']['temp']), 
-                    'durum': data['weather'][0]['description'].title(),
-                    'ikon': data['weather'][0]['icon'] 
-                }
-            else:
-                hata = "Şehir bulunamadı, lütfen yazımı kontrol edin."
-        except:
-            hata = "Bağlantı hatası oluştu."
+        if request.headers.get('HX-Request'):
+            return render(request, 'partials/hava_sonuc.html', {'sonuc': sonuc, 'hata': hata})
             
     return render(request, 'araclar/hava.html', {'form': form, 'sonuc': sonuc, 'hata': hata})
 
 def kitap_scraper_view(request):
-    kitaplar = []
     hata = None
-    
+    # Önce cache'e bak
+    kitaplar = cache.get('kitaplar_verisi')
+
     if request.method == 'POST':
-        try:
-            url = "http://books.toscrape.com/"
-            response = requests.get(url, timeout=10) # Timeout eklendi
-            
-            if response.status_code == 200:
-                soup = BeautifulSoup(response.content, "html.parser")
-                kitap_kutulari = soup.find_all("article", class_="product_pod")
-                
-                # Sadece ilk 8 kitabı çekelim (Sayfa çok uzamasın)
-                for kitap in kitap_kutulari[:8]:
-                    baslik = kitap.find("h3").find("a")["title"]
-                    fiyat = kitap.find("p", class_="price_color").text
-                    
-                    # Resim URL düzeltme
-                    resim_yarim = kitap.find("img")["src"]
-                    resim_tam = "http://books.toscrape.com/" + resim_yarim.replace("../", "") # URL düzeltmesi
-                    
-                    puan_sinifi = kitap.find("p", class_="star-rating")["class"][1]
-                    
-                    kitaplar.append({
-                        'baslik': baslik, 
-                        'fiyat': fiyat, 
-                        'resim': resim_tam, 
-                        'puan': puan_sinifi
-                    })
-            else:
-                hata = "Kaynak siteye erişilemedi."
-        except Exception as e:
-            hata = f"Bir hata oluştu: {str(e)}"
-            
+        # Cache'i yoksay, taze veri çek (Butona basıldı)
+        kitaplar, hata = kitaplari_scrapla()
+        if not hata:
+            cache.set('kitaplar_verisi', kitaplar, 3600)
+        
+        if request.headers.get('HX-Request'):
+             return render(request, 'partials/kitaplar_sonuc.html', {'kitaplar': kitaplar, 'hata': hata})
+    
     return render(request, 'araclar/kitaplar.html', {'kitaplar': kitaplar, 'hata': hata})

@@ -9,7 +9,7 @@
                 <h3 class="m-0 text-white"><i class="fas fa-exchange-alt text-info me-2"></i>Birim Çevirici</h3>
             </div>
             <div class="card-body p-4">
-                <form method="POST">
+                <form method="POST" hx-post="{% url 'cevirici' %}" hx-target="#cevirici-sonuc" hx-swap="innerHTML">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label class="form-label">Dönüştürülecek Değer</label>
@@ -19,14 +19,12 @@
                         <label class="form-label">İşlem Türü</label>
                         {{ form.islem }}
                     </div>
-                    <button type="submit" class="btn btn-info w-100 text-white fw-bold py-2">Hesapla</button>
+                    <button type="submit" class="btn btn-info w-100 text-white fw-bold py-2">
+                        Hesapla <i class="fas fa-calculator ms-2"></i>
+                    </button>
                 </form>
 
-                {% if sonuc %}
-                    <div class="alert alert-info mt-4 text-center border-0 bg-info bg-opacity-10 text-info">
-                        <h4 class="fw-bold mb-0">{{ sonuc }}</h4>
-                    </div>
-                {% endif %}
+                <div id="cevirici-sonuc"></div>
             </div>
         </div>
     </div>

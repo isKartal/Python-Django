@@ -5,28 +5,21 @@
 <div class="text-center mb-5" data-aos="fade-down">
     <h1 class="fw-bold text-white">📚 Kitap Avcısı</h1>
     <p class="text-muted">Anlık veri çekme botu (Scraper)</p>
-    <form method="POST" class="mt-3">
+    
+    <form method="POST" 
+          hx-post="{% url 'kitaplar' %}" 
+          hx-target="#kitap-sonuc" 
+          hx-swap="innerHTML">
         {% csrf_token %}
-        <button type="submit" class="btn btn-success btn-lg px-5 shadow"><i class="fas fa-sync me-2"></i>Verileri Getir</button>
+        <button type="submit" class="btn btn-success btn-lg px-5 shadow">
+            <i class="fas fa-sync me-2"></i>Verileri Getir
+        </button>
     </form>
 </div>
 
-{% if kitaplar %}
-    <div class="row row-cols-1 row-cols-md-4 g-4">
-        {% for kitap in kitaplar %}
-            <div class="col" data-aos="fade-up">
-                <div class="card h-100 border-0 bg-dark hover-scale">
-                    <img src="{{ kitap.resim }}" class="card-img-top p-3 bg-white" style="height:200px; object-fit:contain;">
-                    <div class="card-body text-center">
-                        <h6 class="text-white text-truncate" title="{{ kitap.baslik }}">{{ kitap.baslik }}</h6>
-                        <div class="d-flex justify-content-between mt-3 text-warning fw-bold">
-                            <span>⭐ {{ kitap.puan }}</span>
-                            <span class="text-success">{{ kitap.fiyat }}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-{% endif %}
+<div id="kitap-sonuc">
+    {% if kitaplar %}
+        {% include 'partials/kitaplar_sonuc.html' %}
+    {% endif %}
+</div>
 {% endblock %}

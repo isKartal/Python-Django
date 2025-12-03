@@ -1,0 +1,14 @@
+{% if sonuc %}
+    <div class="card bg-primary text-white border-0 shadow-lg fade-in">
+        <div class="card-body">
+            <h2 class="fw-bold">{{ sonuc.sehir }}</h2>
+            <img src="http://openweathermap.org/img/wn/{{ sonuc.ikon }}@2x.png" style="width:100px;">
+            <h1 class="display-3 fw-bold">{{ sonuc.sicaklik }}°</h1>
+            <p class="text-uppercase mb-0">{{ sonuc.durum }}</p>
+        </div>
+    </div>
+{% endif %}
+
+{% if hata %}
+    <div class="alert alert-danger mt-3 fade-in">{{ hata }}</div>
+{% endif %}
